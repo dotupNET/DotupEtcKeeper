@@ -2,11 +2,12 @@
 Installiert und konfiguriert git und etckeeper.
 Optional kann github als remote Repository verwendet werden. 
 
-## Wie funktioniert es?
+## Installation
+```bash
+bash <(curl -s https://raw.githubusercontent.com/dotupNET/DotupEtcKeeper/master/install.sh)
+```
 
-1. Installation
+## Konfiguration sichern
+EtcCommit "Dein Kommentar"
 
-    git und etckeeper
-
-2. Konfiguration
-
+Wenn bei der Installation github als remote Repository ausgewählt wurde, wird automatisch gepusht.

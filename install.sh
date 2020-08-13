@@ -7,19 +7,21 @@
 scriptFolder="${HOME}/.dotup/DotupEtcKeeper"
 
 Main() {
+
   InstallComponents
 
   # Initialize array that holds the configuration
   typeset -A config
   Bash-LoadSettings "$scriptFolder/.config" config
 
-  # Test
+  # Use github?
   AskConfiguration
-  # ConfigureEtcKeeper $useGithub
-  # CommitEtcKeeper
+
+  ConfigureEtcKeeper $useGithub
   config["GITHUB"]=$useGithub
   Bash-SaveSettings "$scriptFolder/.config" config
 
+  EtcCommit "Initial etc commit"
 }
 
 AskConfiguration() {
@@ -56,7 +58,7 @@ InstallComponents() {
   InstallDotupEtcKeeper
 
   # git and etckeeper
-  #sudo apt install git etckeeper
+  sudo apt install git etckeeper
 }
 
 InstallDotupEtcKeeper() {
@@ -82,14 +84,16 @@ InstallFile() {
 
   mv $1.sh "$scriptFolder"
 
-  if [ $2 == "bashrc" ]; then
+  if [[ $2 ]] && [[ $2 == "bashrc" ]]; then
     TryAddLine ". ${targetFile}" ~/.bashrc
   fi
 
+  . $targetFile
+  
   gecho "Installation completed. $targetFile"
 }
 
-# ConfigureEtcKeeper(UseGit)
+
 ConfigureEtcKeeper() {
 
   # use git
@@ -103,13 +107,9 @@ ConfigureEtcKeeper() {
     sudo sed -i 's/PUSH_REMOTE=""/PUSH_REMOTE="origin"/' /etc/etckeeper/etckeeper.conf
   fi
 
-}
-
-CommitEtcKeeper() {
-  cd /etc
   sudo -E etckeeper init
-
-  EtcCommit "Initial etc commit"
+  sudo -E git --git-dir /etc/.git remote add origin $gitUrl
+  sudo -E git --git-dir /etc/.git push --set-upstream origin master
 }
 
 Main
