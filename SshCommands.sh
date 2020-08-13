@@ -20,8 +20,6 @@ StartSshAgent() {
 
 InitializeGitConfiguration() {
 
-  StartSshAgent
-
   userName=$(git config --global user.name)
   userEmail=$(git config --global user.email)
 
@@ -44,6 +42,7 @@ InitializeGitConfiguration() {
   # else
   #   ssh-keygen -t rsa -b 4096 -C $userName -f $rsaFile
   # fi
+  StartSshAgent
 
   ssh-add $rsaFile
 
